@@ -1865,7 +1865,7 @@ def test_marketplace_manifests_are_shared_and_plugin_manifests_match():
                 "Give the user their Brainstem and operate it through the AI "
                 "they already use."
             ),
-            "version": "0.2.0",
+            "version": "0.2.1",
             "source": "./",
             "category": "productivity",
             "tags": [

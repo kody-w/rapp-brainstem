@@ -46,9 +46,16 @@ def main() -> int:
         raise ValueError("marketplace.json copies differ")
     plugin = load_json(plugin_paths[0])
     marketplace = load_json(marketplace_paths[0])
+    if (
+        plugin.get("$schema")
+        != "https://agent-plugins.org/schemas/1.0.0/plugin.schema.json"
+    ):
+        raise ValueError("plugin must opt into Agent Plugins v1.0.0")
     if plugin.get("name") != "rapp-brainstem":
         raise ValueError("plugin name must be rapp-brainstem")
-    if plugin.get("skills") != "./skills/" or not (ROOT / "skills").is_dir():
+    if plugin.get("skills") not in (None, "./skills/") or not (
+        ROOT / "skills"
+    ).is_dir():
         raise ValueError("plugin skills path is invalid")
     plugins = marketplace.get("plugins")
     if not isinstance(plugins, list) or len(plugins) != 1:
