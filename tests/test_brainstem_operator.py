@@ -425,7 +425,8 @@ def test_generated_bootstraps_are_local_and_python_free_before_installer(
     windows_path = ROOT / "scripts/bootstrap.ps1"
     assert shell_path.read_bytes() == expected_shell
     assert windows_path.read_bytes() == expected_windows
-    subprocess.run(["bash", "-n", str(shell_path)], check=True)
+    if os.name != "nt":
+        subprocess.run(["bash", "-n", str(shell_path)], check=True)
 
     shell = expected_shell.decode("utf-8")
     windows = expected_windows.decode("utf-8")
@@ -499,20 +500,21 @@ def test_generated_bootstraps_are_local_and_python_free_before_installer(
         "2026-09-02T15:39:22.000Z",
     )
 
-    existing_home = tmp_path / "existing-home"
-    (existing_home / ".brainstem").mkdir(parents=True)
-    environment = os.environ.copy()
-    environment["HOME"] = str(existing_home)
-    refused = subprocess.run(
-        ["bash", str(shell_path), "--actor", "github-copilot"],
-        env=environment,
-        text=True,
-        capture_output=True,
-        check=False,
-    )
-    assert refused.returncode == 1
-    assert "fresh bootstrap refuses existing state" in refused.stderr
-    assert not (existing_home / ".rapp").exists()
+    if os.name != "nt":
+        existing_home = tmp_path / "existing-home"
+        (existing_home / ".brainstem").mkdir(parents=True)
+        environment = os.environ.copy()
+        environment["HOME"] = str(existing_home)
+        refused = subprocess.run(
+            ["bash", str(shell_path), "--actor", "github-copilot"],
+            env=environment,
+            text=True,
+            capture_output=True,
+            check=False,
+        )
+        assert refused.returncode == 1
+        assert "fresh bootstrap refuses existing state" in refused.stderr
+        assert not (existing_home / ".rapp").exists()
 
 
 def test_bundled_lock_pins_immutable_installer_and_exact_target():
