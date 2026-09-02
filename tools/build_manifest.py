@@ -174,19 +174,25 @@ hash_file() {
 }
 
 assert_regular_file() {
-    [ -f "$1" ] && [ ! -L "$1" ] || fail "trusted local file is missing or is a symlink: $1"
+    if [ ! -f "$1" ] || [ -L "$1" ]; then
+        fail "trusted local file is missing or is a symlink: $1"
+    fi
 }
 
 assert_hash() {
     local path="$1" expected="$2" actual
     assert_regular_file "$path"
     actual="$(hash_file "$path")"
-    [ "$actual" = "$expected" ] || fail "trusted local file hash mismatch: $path"
+    if [ "$actual" != "$expected" ]; then
+        fail "trusted local file hash mismatch: $path"
+    fi
 }
 
 ensure_real_directory() {
     mkdir -p "$1"
-    [ -d "$1" ] && [ ! -L "$1" ] || fail "refusing non-directory or symlink path: $1"
+    if [ ! -d "$1" ] || [ -L "$1" ]; then
+        fail "refusing non-directory or symlink path: $1"
+    fi
 }
 
 process_creation_identity() {

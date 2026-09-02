@@ -3,7 +3,7 @@
     "bootstrap": {
       "macos-linux": {
         "path": "scripts/bootstrap.sh",
-        "sha256": "fef1609ff86aa50df4c78f81a25533863faf2b9fdcb5a8808d9ca0156169d294",
+        "sha256": "6f2914329d64613d01a218966900c9ec882a14cbc8f5d816252c0ceff0de6e24",
         "url": "https://kody-w.github.io/rapp-brainstem/scripts/bootstrap.sh"
       },
       "windows": {

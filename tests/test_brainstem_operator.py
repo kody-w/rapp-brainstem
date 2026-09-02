@@ -1727,13 +1727,15 @@ cat "$FAKE_INSTALLER_SOURCE" > "$output"
 
 def test_hash_bound_artifacts_are_lf_normalized_even_with_crlf_input():
     attributes = (ROOT / ".gitattributes").read_text(encoding="utf-8")
-    for suffix in ("py", "json", "sh", "ps1"):
+    for suffix in ("py", "json", "sh", "ps1", "md", "html", "txt", "yml", "yaml"):
         assert f"*.{suffix} text eol=lf" in attributes
     hash_bound = [
         "rapp_operator/rappctl.py",
         "installer-lock.json",
         "scripts/bootstrap.sh",
         "scripts/bootstrap.ps1",
+        "skills/rapp-brainstem/SKILL.md",
+        "skills/rapp-brainstem/CLAUDE.md",
     ]
     for path in hash_bound:
         result = subprocess.run(
